@@ -828,6 +828,53 @@ function switchMap(type){
   }
 }
 
+// ── Cloud sync (JSONBlob) ────────────────────────────
+const BLOB='https://jsonblob.com/api/jsonBlob/019e4048-aa27-7a2f-8fe0-f31ca1f13742';
+let cloudData={notes:{"1":"","2":"","3":"","4":"","5":""},edits:{}};
+let saveTimer=null;
+
+async function cloudLoad(){
+  try{
+    const r=await fetch(BLOB);
+    if(r.ok) cloudData=await r.json();
+  }catch(e){ /* offline, use localStorage cache */ }
+}
+
+function cloudSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    // collect current notes
+    for(let d=1;d<=5;d++){
+      const el=document.getElementById('note'+d);
+      if(el) cloudData.notes[d]=el.value;
+    }
+    // collect edits
+    document.querySelectorAll('[data-eid]').forEach(el=>{
+      cloudData.edits[el.dataset.eid]=el.innerHTML;
+    });
+    // save locally as cache
+    localStorage.setItem('seoul_cloud', JSON.stringify(cloudData));
+    // push to cloud
+    try{
+      await fetch(BLOB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(cloudData)});
+      showSyncStatus('☁️ 已同步');
+    }catch(e){ showSyncStatus('📴 離線暫存'); }
+  }, 800);
+}
+
+function showSyncStatus(msg){
+  let el=document.getElementById('syncStatus');
+  if(!el){
+    el=document.createElement('div');
+    el.id='syncStatus';
+    el.style.cssText='position:fixed;bottom:72px;right:24px;background:rgba(0,0,0,.6);color:#fff;padding:5px 12px;border-radius:20px;font-size:.72rem;z-index:998;transition:opacity .5s';
+    document.body.appendChild(el);
+  }
+  el.textContent=msg;
+  el.style.opacity='1';
+  setTimeout(()=>el.style.opacity='0',2000);
+}
+
 // ── Edit mode ────────────────────────────────────────
 let editMode=false;
 
@@ -841,7 +888,7 @@ function toggleEdit(){
     fab.textContent='💾 儲存完成';
     fab.classList.add('active');
   }else{
-    saveEdits();
+    cloudSave();
     fab.textContent='✅ 已儲存！';
     fab.classList.remove('active');
     fab.classList.add('saved');
@@ -849,56 +896,61 @@ function toggleEdit(){
   }
 }
 
-function saveEdits(){
-  document.querySelectorAll('[data-eid]').forEach(el=>{
-    localStorage.setItem('seoul_'+el.dataset.eid, el.innerHTML);
-  });
-}
-
 function resetAll(){
   if(confirm('確定清除所有自訂編輯和備註？這無法復原。')){
-    Object.keys(localStorage).filter(k=>k.startsWith('seoul_')).forEach(k=>localStorage.removeItem(k));
+    cloudData={notes:{"1":"","2":"","3":"","4":"","5":""},edits:{}};
+    localStorage.removeItem('seoul_cloud');
+    fetch(BLOB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(cloudData)});
     location.reload();
   }
 }
 
 // ── Notes ────────────────────────────────────────────
 function saveNote(d){
-  const val=document.getElementById('note'+d).value;
-  localStorage.setItem('seoul_note'+d, val);
+  cloudSave();
 }
 
 // ── Init ─────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded',()=>{
-  // Assign edit IDs to all editable elements
+document.addEventListener('DOMContentLoaded', async ()=>{
+  // Assign edit IDs
   document.querySelectorAll('.ic-title,.ic-desc').forEach((el,i)=>{
     el.dataset.eid='c'+i;
     el.contentEditable='false';
   });
 
-  // Inject note areas into each day
-  const dayLabels=['5/23 六','5/24 日','5/25 一','5/26 二','5/27 三'];
+  // Inject note areas
   for(let d=1;d<=5;d++){
     const day=document.getElementById('day'+d);
     const nd=document.createElement('div');
     nd.className='day-note';
-    nd.innerHTML=`<div class="day-note-label">📝 今日備註 <span>儲存在瀏覽器，重開不消失</span></div>
+    nd.innerHTML=`<div class="day-note-label">📝 今日備註 <span>☁️ 跨裝置同步</span></div>
       <textarea class="note-ta" id="note${d}" placeholder="記下臨時想法、店家地址、收據號碼、匯率..." oninput="saveNote(${d})"></textarea>`;
     day.appendChild(nd);
   }
 
-  // Load saved edits
+  // Load from localStorage cache first (instant)
+  const cache=localStorage.getItem('seoul_cloud');
+  if(cache){ try{ cloudData=JSON.parse(cache); applyData(); }catch(e){} }
+
+  // Then load from cloud (may override cache)
+  showSyncStatus('☁️ 同步中...');
+  await cloudLoad();
+  applyData();
+  showSyncStatus('☁️ 已載入');
+});
+
+function applyData(){
+  // Apply notes
+  for(let d=1;d<=5;d++){
+    const el=document.getElementById('note'+d);
+    if(el && cloudData.notes[d]) el.value=cloudData.notes[d];
+  }
+  // Apply edits
   document.querySelectorAll('[data-eid]').forEach(el=>{
-    const s=localStorage.getItem('seoul_'+el.dataset.eid);
+    const s=cloudData.edits[el.dataset.eid];
     if(s) el.innerHTML=s;
   });
-
-  // Load saved notes
-  for(let d=1;d<=5;d++){
-    const s=localStorage.getItem('seoul_note'+d);
-    if(s) document.getElementById('note'+d).value=s;
-  }
-});
+}
 </script>
 </body>
 </html>
