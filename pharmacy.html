@@ -157,6 +157,20 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}
 .empty-state .emoji{font-size:2.5rem;margin-bottom:10px}
 .empty-state p{font-size:.82rem;line-height:1.6}
 
+/* ─── SHARE BOX ─── */
+.share-box{background:linear-gradient(135deg,#E8F4FD,#EEF2FF);border:1.5px solid #B8D4F0;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.share-box .sb-label{font-size:.75rem;font-weight:800;color:#1565C0;margin-bottom:8px}
+.share-box .sb-url{background:#fff;border:1px dashed #90CAF9;border-radius:8px;padding:8px 12px;font-size:.7rem;color:#333;word-break:break-all;margin-bottom:8px;line-height:1.5}
+.share-box .sb-copy{background:#1565C0;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:.76rem;font-weight:700;cursor:pointer;width:100%}
+
+/* ─── SETUP DIVIDER ─── */
+.setup-divider{display:flex;align-items:center;gap:10px;margin:18px 0 14px;color:#ccc;font-size:.72rem}
+.setup-divider::before,.setup-divider::after{content:'';flex:1;height:1px;background:#eee}
+.setup-join{display:flex;gap:8px;margin-top:0}
+.setup-join input{flex:1;border:1.5px solid #E0D4C8;border-radius:10px;padding:9px 12px;font-size:.8rem;font-family:inherit;outline:none}
+.setup-join input:focus{border-color:var(--blue)}
+.setup-join button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap}
+
 /* ─── LOADING / TOAST ─── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:8px 20px;border-radius:20px;font-size:.78rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
@@ -169,14 +183,19 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}
   <div class="setup-card">
     <div style="font-size:2.2rem;margin-bottom:10px">🏥</div>
     <h1>韓國藥局團購 2026</h1>
-    <p>首次使用需要建立團購清單。<br>請點下方按鈕初始化，建立後把連結傳給同事一起填寫。</p>
+    <p>我是帶貨的發起人，幫大家建立團購訂單系統。<br>建立後把連結傳給同事即可。</p>
     <button class="setup-btn" id="initBtn" onclick="initBlob()">🚀 建立團購訂單系統</button>
-    <p style="font-size:.7rem;color:#aaa;margin-top:12px">已有連結？把同事給你的連結貼到瀏覽器開啟即可</p>
     <div class="setup-share" id="setupShare">
-      <p>✅ 建立成功！複製以下連結傳給同事：</p>
+      <p>✅ 建立成功！複製連結傳給所有同事：</p>
       <div class="share-url" id="shareUrlDisplay"></div>
       <button class="copy-btn" onclick="copySetupUrl()">📋 複製連結</button>
       <button class="setup-btn" style="margin-top:8px;background:var(--green)" onclick="enterApp()">→ 進入填寫頁面</button>
+    </div>
+    <div class="setup-divider">同事請從這裡進入</div>
+    <p style="font-size:.76rem;color:#555;margin-bottom:10px;font-weight:600">已有發起人給的連結或 ID？貼在這裡：</p>
+    <div class="setup-join">
+      <input type="text" id="joinInput" placeholder="貼上連結或 Blob ID">
+      <button onclick="joinWithUrl()">進入 →</button>
     </div>
   </div>
 </div>
@@ -357,6 +376,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}
 
 <!-- ══ TAB: 查看訂單 ══ -->
 <div class="tab-panel" id="tab-summary">
+  <div class="share-box">
+    <div class="sb-label">📤 團購連結（傳給同事點此連結填訂單）</div>
+    <div class="sb-url" id="mainShareUrl">載入中…</div>
+    <button class="sb-copy" onclick="copyMainShareUrl()">📋 複製連結 傳給同事</button>
+  </div>
   <div class="refresh-row">
     <div style="font-size:.8rem;font-weight:700;color:#555">📊 所有訂單匯總</div>
     <button class="refresh-btn" onclick="loadSummary()">🔄 重新整理</button>
@@ -409,6 +433,10 @@ function setParam(k,v){
 }
 
 // ── Setup & init ───────────────────────────────────────────
+function makeShareUrl(id){
+  return window.location.origin + window.location.pathname + '?blob=' + id;
+}
+
 async function initBlob(){
   const btn = document.getElementById('initBtn');
   btn.disabled = true;
@@ -420,21 +448,26 @@ async function initBlob(){
       body: JSON.stringify({orders:[]})
     });
     if (!r.ok) throw new Error('HTTP '+r.status);
-    // Try Location header first (JSONBlob exposes it in CORS)
     let loc = r.headers.get('Location');
     if (loc) {
       BLOB_ID = loc.split('/').pop();
     } else {
-      // Fallback: try JSON body
       try { const d = await r.json(); BLOB_ID = d.id || d._id || null; } catch(e){}
     }
     if (!BLOB_ID) throw new Error('無法取得 Blob ID');
 
-    const shareUrl = window.location.origin + window.location.pathname + '?blob=' + BLOB_ID;
+    localStorage.setItem('pharmacy_blob_id', BLOB_ID);
+    const shareUrl = makeShareUrl(BLOB_ID);
     document.getElementById('shareUrlDisplay').textContent = shareUrl;
     document.getElementById('setupShare').style.display = 'block';
     btn.style.display = 'none';
+    document.querySelector('.setup-divider').style.display = 'none';
+    document.querySelector('.setup-join').style.display = 'none';
+    document.querySelector('.setup-card > p:last-of-type').style.display = 'none';
     window._shareUrl = shareUrl;
+    // Auto-copy
+    navigator.clipboard.writeText(shareUrl).catch(()=>{});
+    showToast('✅ 連結已自動複製！記得傳給同事');
   } catch(e) {
     btn.disabled = false;
     btn.textContent = '🚀 建立團購訂單系統';
@@ -449,11 +482,39 @@ function copySetupUrl(){
     .catch(()=>showToast('請手動複製上方連結'));
 }
 
+function joinWithUrl(){
+  const raw = document.getElementById('joinInput').value.trim();
+  if(!raw){ showToast('請先貼上連結或 ID'); return; }
+  // Accept full URL or just the blob ID
+  let id = raw;
+  try {
+    const u = new URL(raw);
+    id = u.searchParams.get('blob') || raw.split('/').pop();
+  } catch(e) {
+    // Not a URL, treat as raw ID
+    id = raw.split('/').pop();
+  }
+  if(!id){ showToast('無效的連結或 ID'); return; }
+  BLOB_ID = id;
+  localStorage.setItem('pharmacy_blob_id', id);
+  setParam('blob', id);
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildOrderForm();
+}
+
 function enterApp(){
   setParam('blob', BLOB_ID);
   document.getElementById('setup').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   buildOrderForm();
+}
+
+function copyMainShareUrl(){
+  const url = makeShareUrl(BLOB_ID);
+  navigator.clipboard.writeText(url)
+    .then(()=>showToast('✅ 連結已複製！貼到 LINE 傳給同事'))
+    .catch(()=>showToast('請手動複製上方連結'));
 }
 
 // ── Tab switching ──────────────────────────────────────────
@@ -462,7 +523,11 @@ function showTab(name, btn){
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
   document.getElementById('tab-' + name).classList.add('on');
   if(btn) btn.classList.add('on');
-  if(name === 'summary') loadSummary();
+  if(name === 'summary'){
+    const shareEl = document.getElementById('mainShareUrl');
+    if(shareEl && BLOB_ID) shareEl.textContent = makeShareUrl(BLOB_ID);
+    loadSummary();
+  }
 }
 
 // ── Build order form product rows ──────────────────────────
@@ -701,12 +766,18 @@ function showToast(msg){
 
 // ── Bootstrap ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  const blobId = getParam('blob');
+  // Prefer URL param, then localStorage
+  const blobId = getParam('blob') || localStorage.getItem('pharmacy_blob_id');
   if(blobId){
     BLOB_ID = blobId;
+    localStorage.setItem('pharmacy_blob_id', blobId);
+    setParam('blob', blobId);
     document.getElementById('setup').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     buildOrderForm();
+    // Populate share URL on summary tab
+    const shareEl = document.getElementById('mainShareUrl');
+    if(shareEl) shareEl.textContent = makeShareUrl(blobId);
   }
   // else: show setup screen (default)
 });
