@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>韓國藥局必買清單 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FDF8F2;--card:#fff;--text:#1a1a2e;--muted:#888;
+  --accent:#E63462;--orange:#EF7C1C;--green:#00A650;
+  --yellow:#F39C12;--purple:#7D3C98;--blue:#0052A4;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:110px}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#2D1B69 0%,#B03060 55%,#E67E22 100%);color:#fff;padding:14px 20px 10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.h-row{display:flex;align-items:center;gap:12px}
+.h-back{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 13px;border-radius:20px;font-size:.75rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.h-back:hover{background:rgba(255,255,255,.32)}
+.h-info{flex:1}
+.h-title{font-size:1.15rem;font-weight:900;letter-spacing:.5px}
+.h-sub{font-size:.7rem;opacity:.8;margin-top:2px}
+
+/* FILTER */
+.filter-wrap{padding:10px 14px;background:#fff;border-bottom:1px solid #EEE4D8;position:sticky;top:62px;z-index:99;overflow-x:auto;white-space:nowrap}
+.filter-wrap::-webkit-scrollbar{height:0}
+.fb{display:inline-block;padding:5px 13px;border:1.5px solid #DDD0C4;border-radius:20px;font-size:.72rem;font-weight:700;cursor:pointer;background:#fff;color:#888;margin-right:6px;transition:all .2s}
+.fb.on,.fb:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* SUMMARY STRIP */
+.summary{background:linear-gradient(90deg,#FFF8F0,#FFF0E8);border-bottom:1px solid #EEE4D8;padding:8px 20px;font-size:.73rem;color:#7D4E00;display:flex;gap:16px;align-items:center}
+.summary strong{font-size:.82rem;color:#C0392B}
+
+/* MAIN */
+main{padding:14px 14px 0}
+
+/* CATEGORY HEADER */
+.cat-hd{display:flex;align-items:center;gap:8px;margin:20px 0 10px;padding-bottom:8px;border-bottom:2px solid #F0E6DC}
+.cat-hd:first-child{margin-top:4px}
+.cat-icon{font-size:1.15rem}
+.cat-name{font-size:.88rem;font-weight:800}
+.cat-cnt{font-size:.68rem;color:var(--muted);background:#F0E6DC;padding:2px 8px;border-radius:10px}
+
+/* PRODUCT CARD */
+.card{background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:9px;box-shadow:0 2px 9px rgba(0,0,0,.07);display:flex;gap:11px;align-items:flex-start;transition:box-shadow .2s,border .2s;border:1.5px solid transparent;position:relative}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.checked{background:#F3FFF6;border-color:#00A650}
+
+/* CHECKBOX */
+.cb-w{flex-shrink:0;padding-top:3px}
+.cb{width:20px;height:20px;border-radius:6px;border:2px solid #ddd;cursor:pointer;appearance:none;-webkit-appearance:none;background:#fff;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.cb:checked{background:var(--accent);border-color:var(--accent)}
+.cb:checked::before{content:'✓';color:#fff;font-size:.75rem;font-weight:900;display:block;text-align:center;line-height:1}
+
+/* CARD BODY */
+.cb-body{flex:1;min-width:0}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.c-name{font-size:.9rem;font-weight:800;line-height:1.35;flex:1}
+.c-name small{display:block;font-size:.72rem;font-weight:500;color:#999;margin-top:1px}
+.price{font-weight:900;font-size:.82rem;padding:3px 10px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.price.lo{background:#FEF3E2;color:#D35400}
+.price.hi{background:#FDEDEC;color:#C0392B}
+.price.na{background:#F4F4F4;color:#888}
+
+/* BADGES */
+.bdg-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.bdg{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px}
+.b-must{background:#FDEDEC;color:#C0392B}
+.b-hot{background:#FEF3E2;color:#D35400}
+.b-night{background:#EEF2FF;color:#3949AB}
+.b-pdrn{background:#E8F5E9;color:#1B5E20}
+.b-age{background:#F5EEF8;color:#6C3483}
+.b-warn{background:#FFF8E1;color:#E65100}
+.b-safe{background:#E3F2FD;color:#1565C0}
+
+/* FEATURES */
+.features{font-size:.78rem;color:#555;line-height:1.75}
+.features li{list-style:none;padding-left:12px;position:relative}
+.features li::before{content:'·';position:absolute;left:2px;color:var(--orange);font-weight:700}
+
+/* VARIANTS */
+.variants{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.vt{padding:3px 10px;border-radius:8px;font-size:.69rem;font-weight:600;border:1.5px solid #E0E0E0;color:#555}
+.vt.c0{border-color:#F48FB1;color:#C2185B;background:#FFF0F5}
+.vt.c1{border-color:#A5D6A7;color:#2E7D32;background:#F0FFF2}
+.vt.c4{border-color:#81D4FA;color:#0277BD;background:#F0F8FF}
+.vt.c10{border-color:#B0BEC5;color:#455A64;background:#F5F5F5}
+
+/* CAUTION */
+.caution{background:#FFF8E1;border-left:3px solid #F39C12;padding:7px 10px;border-radius:0 7px 7px 0;font-size:.72rem;color:#7D5200;margin-top:8px;line-height:1.55}
+
+/* CHECKED MARK */
+.check-mark{position:absolute;top:11px;right:12px;color:#00A650;font-weight:900;font-size:.95rem;opacity:0;transition:opacity .2s}
+.card.checked .check-mark{opacity:1}
+
+/* FLOATING CART */
+.cart{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:13px 22px;border-radius:30px;font-size:.8rem;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.32);z-index:200;display:flex;align-items:center;gap:14px;min-width:270px;justify-content:space-between;transition:opacity .3s,transform .3s}
+.cart.hide{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(14px)}
+.c-left{display:flex;align-items:center;gap:8px}
+.c-dot{background:var(--accent);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0}
+.c-total{color:#F39C12;font-size:.88rem;font-weight:900}
+.c-clear{background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.7);font-size:.68rem;padding:3px 9px;border-radius:10px;cursor:pointer}
+.c-clear:hover{background:rgba(255,255,255,.22)}
+
+/* HIDDEN */
+.cat-group{transition:opacity .15s}
+.cat-group.hide{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-row">
+    <a class="h-back" href="index.html">← 行程</a>
+    <div class="h-info">
+      <div class="h-title">🏥 韓國藥局必買清單 2026</div>
+      <div class="h-sub">18 項商品 · 勾選加入購物清單 · 自動記憶</div>
+    </div>
+  </div>
+</header>
+
+<div class="filter-wrap">
+  <button class="fb on" onclick="setFilter('all',this)">全部 18</button>
+  <button class="fb" onclick="setFilter('eye',this)">👁️ 眼周</button>
+  <button class="fb" onclick="setFilter('drop',this)">💧 眼藥水</button>
+  <button class="fb" onclick="setFilter('acne',this)">🌿 痘疤</button>
+  <button class="fb" onclick="setFilter('spot',this)">✨ 美白去斑</button>
+  <button class="fb" onclick="setFilter('collagen',this)">💉 膠原蛋白</button>
+  <button class="fb" onclick="setFilter('exo',this)">🔬 外泌體</button>
+  <button class="fb" onclick="setFilter('pdrn',this)">🧬 PDRN</button>
+  <button class="fb" onclick="setFilter('panda',this)">🐼 熊貓系列</button>
+</div>
+
+<div class="summary">
+  📋 全買合計約 <strong>$13,099 TWD</strong>&nbsp;｜&nbsp;依韓元匯率及現場售價為準
+</div>
+
+<main>
+
+<!-- 眼周護理 -->
+<div class="cat-group" id="cat-eye" data-cat="eye">
+  <div class="cat-hd"><span class="cat-icon">👁️</span><span class="cat-name">眼周護理</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p1">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Pro Calm Red X CREAM 維生素K乳霜" data-price="450"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Pro Calm Red X CREAM 維生素K乳霜</div>
+        <div class="price lo">$450</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-hot">🔥 黑眼圈 OUT</span></div>
+      <ul class="features">
+        <li>緩解黑眼圈、舒緩臉部浮腫、減少腫脹感</li>
+        <li>維生素K為肌膚補充養分</li>
+        <li>專利複合益生菌，深層補水、保濕</li>
+        <li>山金車花萃取物，鎮定敏感泛紅</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p2">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Dr. Melaxin 視黃醇眼袋緊緻霜" data-price="1080"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Dr. Melaxin 視黃醇眼袋緊緻霜</div>
+        <div class="price hi">$1080</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-age">♟ 對抗魚尾紋</span><span class="bdg b-hot">脂質體 A醇</span></div>
+      <ul class="features">
+        <li>改善深層皺紋 &amp; 強效拉提</li>
+        <li>主成分：脂質體視黃醇（A醇）</li>
+        <li>專攻眼尾「魚尾紋」</li>
+        <li>特殊技術降低刺激，像熨斗一樣將深刻皺紋撫平</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 眼藥水 -->
+<div class="cat-group" id="cat-drop" data-cat="drop">
+  <div class="cat-hd"><span class="cat-icon">💧</span><span class="cat-name">眼部保濕 / 眼藥水</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p3">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Peridex 眼藥水" data-price="250"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Peridex 眼藥水<small>아이드롭</small></div>
+        <div class="price lo">$250</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">乾眼人必備</span><span class="bdg b-safe">隱眼可用</span></div>
+      <ul class="features">
+        <li>葡萄糖眼藥水，緩解乾澀、疲勞、異物感</li>
+        <li>提供眼睛營養，戴隱形眼鏡也能滴</li>
+      </ul>
+      <div class="variants">
+        <span class="vt c0">溫和 涼感0度</span>
+        <span class="vt c1">微清涼 涼感1度</span>
+        <span class="vt c4">強清涼 涼感4度</span>
+        <span class="vt c10">最冰涼 涼感10度</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="p4">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="PDRN 眼部保濕精華（리안 人工淚液）" data-price="499"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">PDRN 眼部保濕精華<small>리안 · 韓國第一款PDRN人工淚液</small></div>
+        <div class="price lo">$499</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">無防腐劑</span><span class="bdg b-safe">一次性獨立包裝</span><span class="bdg b-safe">隱眼可用</span></div>
+      <ul class="features">
+        <li>主打給角膜 &amp; 結膜做「營養修復」</li>
+        <li>對眼睛更友好，每天 2~4 次，每次 2~3 滴</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 痘疤修護 -->
+<div class="cat-group" id="cat-acne" data-cat="acne">
+  <div class="cat-hd"><span class="cat-icon">🌿</span><span class="cat-name">痘疤修護</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p5">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Cearteen 水楊酸祛痘水" data-price="450"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Cearteen 水楊酸祛痘水<small>클리어틴</small></div>
+        <div class="price lo">$450</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-hot">2% 水楊酸</span></div>
+      <ul class="features">
+        <li>治療問痘、閉鎖式粉刺</li>
+        <li>有效抑制暗痘殺菌，溶解黑頭、白頭</li>
+        <li>減少毛孔阻塞及暗粒生成</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p6">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Scarnon Gel 除疤修復凝膠" data-price="590"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Scarnon Gel 除疤修復凝膠<small>스카논겔</small></div>
+        <div class="price lo">$590</div>
+      </div>
+      <ul class="features">
+        <li>適用於手術、外傷、燒燙傷後的新舊疤痕</li>
+        <li>蟹足腫及已癒合傷口護理</li>
+      </ul>
+      <div class="caution">⚠️ 開放性傷口、化膿未消炎處勿用</div>
+    </div>
+  </div>
+</div>
+
+<!-- 美白去斑 -->
+<div class="cat-group" id="cat-spot" data-cat="spot">
+  <div class="cat-hd"><span class="cat-icon">✨</span><span class="cat-name">美白去斑</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p7">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Melatoning Cream 褪黑去斑霜" data-price="1080"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Melatoning Cream 褪黑去斑霜</div>
+        <div class="price hi">$1080</div>
+      </div>
+      <ul class="features">
+        <li>改善淡化色素沉澱問題</li>
+        <li>雀斑、黃褐斑（皮膚斑點）</li>
+        <li>妊娠斑、老年斑及痘疤暗沉</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p8">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Domina Cream 居家皮秒淡斑膏" data-price="0"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Domina Cream 居家皮秒淡斑膏<small>도미나 크림</small></div>
+        <div class="price na">現場確認</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-must">🏆 韓國熱銷 NO.1</span><span class="bdg b-hot">藥師大推</span></div>
+      <ul class="features">
+        <li>居家皮秒效果，針對色斑、不均勻膚色</li>
+        <li>韓國藥局藥師強力推薦</li>
+      </ul>
+      <div class="caution">⚠️ 千萬不要亂用！請先詢問藥師正確使用方式與份量</div>
+    </div>
+  </div>
+</div>
+
+<!-- 膠原蛋白 -->
+<div class="cat-group" id="cat-collagen" data-cat="collagen">
+  <div class="cat-hd"><span class="cat-icon">💉</span><span class="cat-name">膠原蛋白 / 抗老</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p9">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Juvekle 童顏霜" data-price="1180"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Juvekle 童顏霜</div>
+        <div class="price hi">$1180</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-must">🔥 必買</span><span class="bdg b-pdrn">PDLLA 10,625ppm</span></div>
+      <ul class="features">
+        <li>針對眼下凹陷、法令紋</li>
+        <li>含醫美童顏針（喬雅露）同成分</li>
+        <li>韓國藥局第一支「塗抹式」的膠原蛋白針</li>
+        <li>PDLLA：改善細紋、皺紋、填補凹陷（法令紋、蘋果肌）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p10">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Rejuyoung 深層修復霜" data-price="1080"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Rejuyoung 深層修復霜</div>
+        <div class="price hi">$1080</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">10,000ppm</span><span class="bdg b-age">3倍高滲透</span></div>
+      <ul class="features">
+        <li>直達真皮層促膠原自生</li>
+        <li>跟用打的麗珠蘭一樣的濃度，清爽無油感</li>
+        <li>全臉可使用，修護及穩定膚況</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 外泌體 -->
+<div class="cat-group" id="cat-exo" data-cat="exo">
+  <div class="cat-hd"><span class="cat-icon">🔬</span><span class="cat-name">積雪草外泌體安瓶</span><span class="cat-cnt">2 項</span></div>
+
+  <div class="card" id="p11">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="積雪草外泌體20安瓶（日常修護款）" data-price="690"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">積雪草外泌體 20安瓶<small>CICA EXOSOnethod · 日常修護款</small></div>
+        <div class="price lo">$690</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-safe">☑ 日常修護</span><span class="bdg b-pdrn">9種胜肽</span><span class="bdg b-hot">EGF</span></div>
+      <ul class="features">
+        <li>溫和高效修護，預防初老適用</li>
+        <li>EGF 促進膠原蛋白合成、加速肌膚更新</li>
+        <li>9種胜肽複合物，提升修護力及基礎保濕屏障、抗老化</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p12">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="積雪草外泌體50安瓶 Plus（高濃度急救款）" data-price="890"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">積雪草外泌體 50安瓶 Plus<small>CICA EXOSOnethod PLUS · 高濃度急救款</small></div>
+        <div class="price hi">$890</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-must">☑ 高濃度急救</span><span class="bdg b-pdrn">13種胜肽</span></div>
+      <ul class="features">
+        <li>美白 + 抗皺雙效功能</li>
+        <li>適合術後、醫美後緊急修護</li>
+        <li>超速滲透，臨床顯示吸收效率提升 2.5倍</li>
+        <li>緊緻抗皺、彈潤膨亮、淡斑抗暗沉、長效保濕鎖水</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PDRN 系列 -->
+<div class="cat-group" id="cat-pdrn" data-cat="pdrn">
+  <div class="cat-hd"><span class="cat-icon">🧬</span><span class="cat-name">Dr.Reju-All PDRN 系列</span><span class="cat-cnt">3 項</span></div>
+
+  <div class="card" id="p13">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Dr.Reju-All PD3 全效霜" data-price="1080"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Dr.Reju-All PD3 全效霜</div>
+        <div class="price hi">$1080</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-must">💥 激推</span><span class="bdg b-pdrn">PDRN 1200ppm</span></div>
+      <ul class="features">
+        <li>最佳修復效果，改善皺紋、淡化細紋</li>
+        <li>促進膠原蛋白及彈力產生、美白保濕</li>
+        <li>不刺激，日夜皆可用，可擦全臉</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p14">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Dr.Reju-All PDRN 唇部修護精華" data-price="550"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Dr.Reju-All PDRN 唇部修護精華<small>Advanced PDRN Rejuvenating Lip Serum</small></div>
+        <div class="price lo">$550</div>
+      </div>
+      <ul class="features">
+        <li>改善唇部角質問題</li>
+        <li>提升保濕度、光澤感</li>
+        <li>改善拉提（豐唇）效果</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p15">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="Dr.Reju-All 高效PDRN煥顏修護面膜（一盒6片）" data-price="880"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">Dr.Reju-All 高效PDRN 煥顏修護面膜<small>Advanced PDRN RN Mask · 一盒 6片</small></div>
+        <div class="price lo">$880</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1200ppm</span><span class="bdg b-safe">無酒精</span></div>
+      <ul class="features">
+        <li>高含量PDRN幫助肌膚再生，搭配美白成分同步提亮膚色</li>
+        <li>改善暗沉不均、提升彈力、緊緻肌膚</li>
+        <li>臉＋頸全方位抗老型</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 熊貓系列 -->
+<div class="cat-group" id="cat-panda" data-cat="panda">
+  <div class="cat-hd"><span class="cat-icon">🐼</span><span class="cat-name">熊貓系列（REJUREPAIR）</span><span class="cat-cnt">3 項</span></div>
+
+  <div class="card" id="p16">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="熊貓PDRN再生霜 綠（清爽凝膠）" data-price="750"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">熊貓PDRN再生霜 🟢 綠<small>REJUREPAIR Cream · 清爽凝膠質地</small></div>
+        <div class="price lo">$750</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1500ppm</span><span class="bdg b-hot">夏天無負擔</span></div>
+      <ul class="features">
+        <li>高濃度1500ppm，卻是清爽凝膠質地，夏天用也無負擔</li>
+        <li>肌膚修復、促進細胞再生、抗皺、加強保濕</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" id="p17">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="熊貓PDRN再生霜 藍（Spicule微針加強版）" data-price="850"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">熊貓PDRN再生霜 🔵 藍<small>REJUREPAIR SHOT · PDRN &amp; Spicule 微針</small></div>
+        <div class="price hi">$850</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1500ppm</span><span class="bdg b-age">Spicule 微針</span></div>
+      <ul class="features">
+        <li>比綠色濃度更高，有微針感覺</li>
+        <li>吸收率優於其他PDRN產品</li>
+      </ul>
+      <div class="caution">⚠️ 微針成分有輕微刺激感，敏感肌建議先小範圍試用</div>
+    </div>
+  </div>
+
+  <div class="card" id="p18">
+    <span class="check-mark">✓</span>
+    <div class="cb-w"><input class="cb" type="checkbox" onchange="sync()" data-name="熊貓維他命C霜（PANDA VITA Cream）" data-price="750"></div>
+    <div class="cb-body">
+      <div class="card-top">
+        <div class="c-name">熊貓維他命C霜<small>PANDA VITA Cream</small></div>
+        <div class="price lo">$750</div>
+      </div>
+      <div class="bdg-row"><span class="bdg b-night">🌙 熬夜人必買</span><span class="bdg b-hot">美白去斑</span></div>
+      <ul class="features">
+        <li>針對美白、提亮、淡斑</li>
+        <li>質地清爽不黏膩</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- 浮動購物清單 -->
+<div class="cart hide" id="cartBar">
+  <div class="c-left">
+    <div class="c-dot" id="cartCnt">0</div>
+    <div>已選商品</div>
+  </div>
+  <div class="c-total" id="cartTotal">$0</div>
+  <button class="c-clear" onclick="clearCart()">清除</button>
+</div>
+
+<script>
+function sync(){
+  const checked=[...document.querySelectorAll('.cb:checked')];
+  let total=0,count=0;
+  document.querySelectorAll('.card').forEach(c=>{
+    const cb=c.querySelector('.cb');
+    if(cb&&cb.checked){c.classList.add('checked');total+=parseInt(cb.dataset.price)||0;count++;}
+    else{c.classList.remove('checked');}
+  });
+  const bar=document.getElementById('cartBar');
+  if(count===0){bar.classList.add('hide');return;}
+  bar.classList.remove('hide');
+  document.getElementById('cartCnt').textContent=count;
+  const hasUnknown=checked.some(c=>parseInt(c.dataset.price)===0);
+  document.getElementById('cartTotal').textContent=total>0?`$${total.toLocaleString()} TWD`+(hasUnknown?' +α':''):'（現場確認）';
+  localStorage.setItem('pharm26',[...document.querySelectorAll('.card')].map(c=>c.querySelector('.cb')?.checked?'1':'0').join(''));
+}
+
+function clearCart(){
+  document.querySelectorAll('.cb').forEach(c=>c.checked=false);
+  sync();
+}
+
+function setFilter(cat,btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.cat-group').forEach(g=>{
+    g.classList.toggle('hide', cat!=='all' && g.dataset.cat!==cat);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const saved=localStorage.getItem('pharm26');
+  if(saved){
+    const cards=[...document.querySelectorAll('.card')];
+    [...saved].forEach((v,i)=>{
+      if(v==='1'&&cards[i]){
+        const cb=cards[i].querySelector('.cb');
+        if(cb) cb.checked=true;
+      }
+    });
+    sync();
+  }
+});
+</script>
+</body>
+</html>
