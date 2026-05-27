@@ -1,621 +1,583 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>韓國藥局團購 2026</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#FDF8F2;--card:#fff;--text:#1a1a2e;--muted:#888;
-  --accent:#E63462;--orange:#EF7C1C;--green:#00A650;--yellow:#F39C12;
-  --purple:#7D3C98;--blue:#0052A4;--border:#EEE4D8;
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
-
-
-/* ─── HEADER ─── */
-header{background:linear-gradient(135deg,#2D1B69,#B03060 55%,#E67E22);color:#fff;padding:13px 18px 10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
-.h-row{display:flex;align-items:center;gap:10px}
-.h-back{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:20px;font-size:.73rem;cursor:pointer;text-decoration:none;white-space:nowrap}
-.h-back:hover{background:rgba(255,255,255,.32)}
-.h-info{flex:1;min-width:0}
-.h-title{font-size:1.05rem;font-weight:900}
-.h-sub{font-size:.68rem;opacity:.8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* ─── TABS ─── */
-.tab-bar{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:59px;z-index:99}
-.tab-btn{flex:1;padding:11px 4px;border:none;background:transparent;font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.tab-btn.on{color:var(--accent);border-bottom-color:var(--accent)}
-
-/* ─── TAB PANELS ─── */
-.tab-panel{display:none;padding:14px}
-.tab-panel.on{display:block}
-
-/* ─── SECTION HEADER ─── */
-.sec-hd{display:flex;align-items:center;gap:8px;margin:18px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--border)}
-.sec-hd:first-child{margin-top:4px}
-.sec-icon{font-size:1.1rem}
-.sec-name{font-size:.86rem;font-weight:800}
-.sec-cnt{font-size:.67rem;color:var(--muted);background:var(--border);padding:2px 8px;border-radius:10px}
-
-/* ─── CATALOG CARD ─── */
-.c-card{background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:9px;box-shadow:0 2px 9px rgba(0,0,0,.07);border:1.5px solid transparent}
-.c-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
-.c-name{font-size:.88rem;font-weight:800;line-height:1.35;flex:1}
-.c-name small{display:block;font-size:.7rem;font-weight:500;color:#999;margin-top:1px}
-.price{font-weight:900;font-size:.8rem;padding:3px 10px;border-radius:10px;white-space:nowrap;flex-shrink:0}
-.p-lo{background:#FEF3E2;color:#D35400}
-.p-hi{background:#FDEDEC;color:#C0392B}
-.p-na{background:#F4F4F4;color:#888}
-.bdg-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
-.bdg{font-size:.63rem;font-weight:700;padding:2px 8px;border-radius:8px}
-.b-must{background:#FDEDEC;color:#C0392B}
-.b-hot{background:#FEF3E2;color:#D35400}
-.b-night{background:#EEF2FF;color:#3949AB}
-.b-pdrn{background:#E8F5E9;color:#1B5E20}
-.b-age{background:#F5EEF8;color:#6C3483}
-.b-safe{background:#E3F2FD;color:#1565C0}
-.feats{font-size:.77rem;color:#555;line-height:1.7}
-.feats li{list-style:none;padding-left:11px;position:relative}
-.feats li::before{content:'·';position:absolute;left:2px;color:var(--orange);font-weight:700}
-.variants{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.vt{padding:3px 9px;border-radius:8px;font-size:.68rem;font-weight:600;border:1.5px solid #E0E0E0;color:#555}
-.vt.c0{border-color:#F48FB1;color:#C2185B;background:#FFF0F5}
-.vt.c1{border-color:#A5D6A7;color:#2E7D32;background:#F0FFF2}
-.vt.c4{border-color:#81D4FA;color:#0277BD;background:#F0F8FF}
-.vt.c10{border-color:#B0BEC5;color:#455A64;background:#F5F5F5}
-.caution{background:#FFF8E1;border-left:3px solid var(--yellow);padding:7px 10px;border-radius:0 7px 7px 0;font-size:.72rem;color:#7D5200;margin-top:8px;line-height:1.5}
-
-/* ─── ORDER FORM ─── */
-.field-group{margin-bottom:16px}
-.field-label{font-size:.78rem;font-weight:700;color:#555;margin-bottom:6px;display:block}
-.field-label span{color:var(--accent)}
-input[type=text],textarea{width:100%;border:1.5px solid #E0D4C8;border-radius:10px;padding:10px 13px;font-size:.85rem;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border .2s}
-input[type=text]:focus,textarea:focus{border-color:var(--accent)}
-textarea{resize:vertical;min-height:80px;line-height:1.6}
-
-/* ORDER PRODUCT ROW */
-.ord-row{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1.5px solid transparent;transition:all .2s;cursor:pointer}
-.ord-row.selected{border-color:var(--green);background:#F3FFF6}
-.ord-top{display:flex;align-items:center;gap:10px}
-.ord-cb{width:20px;height:20px;border-radius:6px;border:2px solid #ddd;cursor:pointer;appearance:none;-webkit-appearance:none;background:#fff;flex-shrink:0;transition:all .2s}
-.ord-cb:checked{background:var(--accent);border-color:var(--accent)}
-.ord-cb:checked::before{content:'✓';display:block;color:#fff;font-size:.72rem;font-weight:900;text-align:center;line-height:16px}
-.ord-name{flex:1;font-size:.84rem;font-weight:700;line-height:1.35}
-.ord-name small{font-size:.69rem;font-weight:400;color:#999}
-.ord-price{font-size:.8rem;font-weight:800;color:var(--orange);flex-shrink:0}
-/* qty controls (hidden until checked) */
-.qty-row{display:none;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid #F0E8E0}
-.ord-row.selected .qty-row{display:flex}
-.qty-label{font-size:.75rem;color:#777;flex:1}
-.qty-ctrl{display:flex;align-items:center;gap:6px}
-.q-btn{width:28px;height:28px;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1;transition:all .15s}
-.q-btn:hover{border-color:var(--accent);color:var(--accent)}
-.q-val{width:32px;text-align:center;font-size:.88rem;font-weight:700}
-.ord-sub{font-size:.78rem;font-weight:700;color:var(--accent)}
-
-/* ORDER TOTAL BAR */
-.total-bar{background:linear-gradient(135deg,#1B2A4A,#2C4F7C);color:#fff;border-radius:14px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;justify-content:space-between}
-.total-bar .lbl{font-size:.78rem;opacity:.8}
-.total-bar .amt{font-size:1.2rem;font-weight:900}
-.total-bar .cnt{font-size:.72rem;opacity:.65;margin-top:2px}
-
-.submit-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:14px;font-size:.95rem;font-weight:900;cursor:pointer;transition:background .2s;letter-spacing:.5px}
-.submit-btn:hover{background:#C0285A}
-.submit-btn:disabled{background:#ccc;cursor:not-allowed}
-
-/* SUCCESS CARD */
-#successCard{display:none;background:#fff;border-radius:16px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-top:16px;text-align:center;border:2px solid var(--green)}
-.success-icon{font-size:2.5rem;margin-bottom:8px}
-.success-title{font-size:1rem;font-weight:800;color:var(--green);margin-bottom:4px}
-.success-sub{font-size:.78rem;color:#666;margin-bottom:16px}
-.success-summary{background:#F3FFF6;border-radius:10px;padding:12px;text-align:left;font-size:.78rem;line-height:1.8;margin-bottom:14px;border:1px solid #C8F0D0}
-.success-summary strong{font-weight:800}
-.copy-order-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;margin-bottom:8px}
-.again-btn{width:100%;padding:11px;background:#F5F5F5;color:#555;border:none;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer}
-
-/* ─── SUMMARY TAB ─── */
-.refresh-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.refresh-btn{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.75rem;font-weight:700;cursor:pointer;color:#555}
-.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
-.order-card{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 9px rgba(0,0,0,.07)}
-.order-card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.order-person{font-size:.9rem;font-weight:800}
-.order-time{font-size:.68rem;color:var(--muted)}
-.order-items{font-size:.78rem;line-height:1.8;color:#444;border-top:1px solid #F0E8E0;padding-top:8px;margin-bottom:8px}
-.order-items .item-row{display:flex;justify-content:space-between}
-.order-total-line{display:flex;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--accent);border-top:1px solid #F0E8E0;padding-top:8px}
-.order-note{font-size:.73rem;color:#888;margin-top:6px;padding:6px 10px;background:#FAFAFA;border-radius:6px;font-style:italic}
-
-/* AGGREGATE TABLE */
-.agg-card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 9px rgba(0,0,0,.07);margin-bottom:10px}
-.agg-card h3{font-size:.84rem;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);color:var(--text)}
-.agg-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F5F0EB;font-size:.78rem}
-.agg-row:last-child{border-bottom:none}
-.agg-name{flex:1;font-weight:600}
-.agg-qty{background:var(--accent);color:#fff;font-weight:900;font-size:.7rem;padding:2px 9px;border-radius:10px;margin:0 8px}
-.agg-subtotal{font-weight:700;color:var(--orange);font-size:.78rem}
-.grand-total{background:linear-gradient(135deg,#1B2A4A,#2C4F7C);color:#fff;border-radius:14px;padding:16px;text-align:center;margin-bottom:10px}
-.grand-total .gt-label{font-size:.78rem;opacity:.75;margin-bottom:4px}
-.grand-total .gt-amt{font-size:1.4rem;font-weight:900}
-.grand-total .gt-note{font-size:.65rem;opacity:.6;margin-top:4px}
-
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-state .emoji{font-size:2.5rem;margin-bottom:10px}
-.empty-state p{font-size:.82rem;line-height:1.6}
-
-/* ─── LOADING / TOAST ─── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:8px 20px;border-radius:20px;font-size:.78rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>韓國藥妝 團購自動匯整系統</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen text-slate-800 pb-32">
 
-<!-- ══ MAIN APP ══ -->
-<div id="app">
-
-<header>
-  <div class="h-row">
-    <a class="h-back" href="index.html">← 行程</a>
-    <div class="h-info">
-      <div class="h-title">🏥 韓國藥局團購 2026</div>
-      <div class="h-sub" id="appSubtitle">18 項商品 · 勾選填寫訂單送出</div>
-    </div>
-  </div>
-</header>
-
-<div class="tab-bar">
-  <button class="tab-btn on" onclick="showTab('catalog',this)">🛍 商品目錄</button>
-  <button class="tab-btn" onclick="showTab('order',this)">📝 我要訂購</button>
-  <button class="tab-btn" onclick="showTab('summary',this)">📊 查看訂單</button>
-</div>
-
-<!-- ══ TAB: 商品目錄 ══ -->
-<div class="tab-panel on" id="tab-catalog">
-
-  <div class="sec-hd"><span class="sec-icon">👁️</span><span class="sec-name">眼周護理</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Pro Calm Red X CREAM 維生素K乳霜</div><div class="price p-lo">$450</div></div>
-    <div class="bdg-row"><span class="bdg b-hot">🔥 黑眼圈 OUT</span></div>
-    <ul class="feats"><li>緩解黑眼圈、舒緩臉部浮腫、減少腫脹感</li><li>維生素K養分 + 專利複合益生菌深層補水</li><li>山金車花萃取物鎮定敏感泛紅</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Dr. Melaxin 視黃醇眼袋緊緻霜</div><div class="price p-hi">$1080</div></div>
-    <div class="bdg-row"><span class="bdg b-age">♟ 對抗魚尾紋</span><span class="bdg b-hot">脂質體A醇</span></div>
-    <ul class="feats"><li>改善深層皺紋 &amp; 強效拉提</li><li>主成分：脂質體視黃醇（A醇）</li><li>特殊技術降低刺激，像熨斗撫平魚尾紋</li></ul>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">💧</span><span class="sec-name">眼部保濕 / 眼藥水</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Peridex 眼藥水<small>아이드롭</small></div><div class="price p-lo">$250</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">乾眼人必備</span><span class="bdg b-safe">隱眼可用</span></div>
-    <ul class="feats"><li>葡萄糖眼藥水，緩解乾澀疲勞異物感</li></ul>
-    <div class="variants"><span class="vt c0">溫和 0度</span><span class="vt c1">微清涼 1度</span><span class="vt c4">強清涼 4度</span><span class="vt c10">最冰涼 10度</span></div>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">PDRN 眼部保濕精華<small>리안 人工淚液</small></div><div class="price p-lo">$499</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">無防腐劑</span><span class="bdg b-safe">一次性獨立包裝</span><span class="bdg b-safe">隱眼可用</span></div>
-    <ul class="feats"><li>主打給角膜 &amp; 結膜做「營養修復」</li><li>每天2~4次，每次2~3滴，韓國第一款PDRN人工淚液</li></ul>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">🌿</span><span class="sec-name">痘疤修護</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Cearteen 水楊酸祛痘水<small>클리어틴</small></div><div class="price p-lo">$450</div></div>
-    <div class="bdg-row"><span class="bdg b-hot">2% 水楊酸</span></div>
-    <ul class="feats"><li>治療問痘、閉鎖式粉刺</li><li>溶解黑頭白頭、減少毛孔阻塞</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Scarnon Gel 除疤修復凝膠<small>스카논겔</small></div><div class="price p-lo">$590</div></div>
-    <ul class="feats"><li>手術、外傷、燒燙傷後的新舊疤痕</li><li>蟹足腫及已癒合傷口護理</li></ul>
-    <div class="caution">⚠️ 開放性傷口、化膿未消炎處勿用</div>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">✨</span><span class="sec-name">美白去斑</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Melatoning Cream 褪黑去斑霜</div><div class="price p-hi">$1080</div></div>
-    <ul class="feats"><li>雀斑、黃褐斑、妊娠斑、老年斑、痘疤暗沉</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Domina Cream 居家皮秒淡斑膏<small>도미나 크림</small></div><div class="price p-na">現場確認</div></div>
-    <div class="bdg-row"><span class="bdg b-must">🏆 韓國熱銷 NO.1</span><span class="bdg b-hot">藥師大推</span></div>
-    <ul class="feats"><li>居家皮秒效果，針對色斑不均勻膚色</li></ul>
-    <div class="caution">⚠️ 千萬不要亂用！請先詢問藥師使用方式</div>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">💉</span><span class="sec-name">膠原蛋白 / 抗老</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Juvekle 童顏霜</div><div class="price p-hi">$1180</div></div>
-    <div class="bdg-row"><span class="bdg b-must">🔥 必買</span><span class="bdg b-pdrn">PDLLA 10,625ppm</span></div>
-    <ul class="feats"><li>針對眼下凹陷、法令紋</li><li>含醫美童顏針（喬雅露）同成分，韓國藥局第一支塗抹式膠原蛋白針</li><li>改善細紋皺紋、填補凹陷（法令紋、蘋果肌）</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Rejuyoung 深層修復霜</div><div class="price p-hi">$1080</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">10,000ppm</span><span class="bdg b-age">3倍高滲透</span></div>
-    <ul class="feats"><li>直達真皮層促膠原自生，跟打的麗珠蘭一樣濃度</li><li>清爽無油感，全臉可使用</li></ul>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">🔬</span><span class="sec-name">積雪草外泌體安瓶</span><span class="sec-cnt">2 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">積雪草外泌體 20安瓶<small>CICA EXOSOnethod · 日常修護款</small></div><div class="price p-lo">$690</div></div>
-    <div class="bdg-row"><span class="bdg b-safe">☑ 日常修護</span><span class="bdg b-pdrn">9種胜肽</span><span class="bdg b-hot">EGF</span></div>
-    <ul class="feats"><li>溫和高效修護，預防初老</li><li>EGF促進膠原蛋白合成，9種胜肽複合物</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">積雪草外泌體 50安瓶 Plus<small>CICA EXOSOnethod PLUS · 高濃度急救款</small></div><div class="price p-hi">$890</div></div>
-    <div class="bdg-row"><span class="bdg b-must">☑ 高濃度急救</span><span class="bdg b-pdrn">13種胜肽</span></div>
-    <ul class="feats"><li>美白+抗皺雙效，術後醫美後緊急修護</li><li>臨床吸收效率提升2.5倍，緊緻抗皺彈潤淡斑</li></ul>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">🧬</span><span class="sec-name">Dr.Reju-All PDRN 系列</span><span class="sec-cnt">3 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Dr.Reju-All PD3 全效霜</div><div class="price p-hi">$1080</div></div>
-    <div class="bdg-row"><span class="bdg b-must">💥 激推</span><span class="bdg b-pdrn">PDRN 1200ppm</span></div>
-    <ul class="feats"><li>改善皺紋、淡化細紋、促進膠原蛋白產生</li><li>不刺激，日夜可用，可擦全臉</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Dr.Reju-All PDRN 唇部修護精華<small>Advanced PDRN Rejuvenating Lip Serum</small></div><div class="price p-lo">$550</div></div>
-    <ul class="feats"><li>改善唇部角質、提升保濕度光澤感</li><li>改善拉提（豐唇）效果</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">Dr.Reju-All 高效PDRN煥顏修護面膜<small>Advanced PDRN RN Mask · 一盒 6片</small></div><div class="price p-lo">$880</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1200ppm</span><span class="bdg b-safe">無酒精</span></div>
-    <ul class="feats"><li>高含量PDRN幫助肌膚再生，美白成分同步提亮</li><li>臉＋頸全方位抗老，改善暗沉彈力緊緻</li></ul>
-  </div>
-
-  <div class="sec-hd"><span class="sec-icon">🐼</span><span class="sec-name">熊貓系列（REJUREPAIR）</span><span class="sec-cnt">3 項</span></div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">熊貓PDRN再生霜 🟢 綠<small>REJUREPAIR Cream · 清爽凝膠質地</small></div><div class="price p-lo">$750</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1500ppm</span><span class="bdg b-hot">夏天無負擔</span></div>
-    <ul class="feats"><li>高濃度1500ppm卻是清爽凝膠，夏天用也無負擔</li><li>肌膚修復、促細胞再生、抗皺加強保濕</li></ul>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">熊貓PDRN再生霜 🔵 藍<small>REJUREPAIR SHOT · PDRN &amp; Spicule 微針</small></div><div class="price p-hi">$850</div></div>
-    <div class="bdg-row"><span class="bdg b-pdrn">PDRN 1500ppm</span><span class="bdg b-age">Spicule 微針</span></div>
-    <ul class="feats"><li>比綠色濃度更高，有微針感覺</li><li>PDRN + 微針，吸收率優於其他PDRN產品</li></ul>
-    <div class="caution">⚠️ 微針成分有輕微刺激感，敏感肌建議先小範圍試用</div>
-  </div>
-  <div class="c-card">
-    <div class="c-top"><div class="c-name">熊貓維他命C霜<small>PANDA VITA Cream</small></div><div class="price p-lo">$750</div></div>
-    <div class="bdg-row"><span class="bdg b-night">🌙 熬夜人必買</span><span class="bdg b-hot">美白去斑</span></div>
-    <ul class="feats"><li>針對美白、提亮、淡斑，質地清爽不黏膩</li></ul>
-  </div>
-
-</div><!-- /tab-catalog -->
-
-<!-- ══ TAB: 填寫訂單 ══ -->
-<div class="tab-panel" id="tab-order">
-
-  <!-- order form -->
-  <div id="orderForm">
-    <div class="field-group">
-      <label class="field-label">訂購人姓名 <span>*</span></label>
-      <input type="text" id="ordererName" placeholder="請輸入你的名字" maxlength="20">
-    </div>
-
-    <div style="font-size:.8rem;font-weight:700;color:#555;margin-bottom:10px">選擇商品 &amp; 數量（可多選）</div>
-
-    <!-- product rows generated by JS -->
-    <div id="orderProductList"></div>
-
-    <div class="total-bar" id="totalBar">
-      <div>
-        <div class="lbl">預估總金額</div>
-        <div class="cnt" id="totalCnt">尚未選擇商品</div>
-      </div>
-      <div class="amt" id="totalAmt">$0</div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">備註 / 特殊需求</label>
-      <textarea id="orderNote" placeholder="例如：Peridex 幫我買涼感0度的、Domina Cream 問一下有沒有貨…"></textarea>
-    </div>
-
-    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">📦 送出訂單</button>
-  </div>
-
-  <!-- success card -->
-  <div id="successCard">
-    <div class="success-icon">🎉</div>
-    <div class="success-title">訂單已送出！</div>
-    <div class="success-sub">感謝你的訂購，帶貨人會幫你記著的！</div>
-    <div class="success-summary" id="successSummary"></div>
-    <button class="copy-order-btn" onclick="copyOrderSummary()">📋 複製訂單摘要（貼到 LINE）</button>
-    <button class="again-btn" onclick="resetForm()">＋ 再填一份訂單</button>
-  </div>
-
-</div><!-- /tab-order -->
-
-<!-- ══ TAB: 查看訂單 ══ -->
-<div class="tab-panel" id="tab-summary">
-  <div class="refresh-row">
-    <div style="font-size:.8rem;font-weight:700;color:#555">📊 所有訂單匯總</div>
-    <button class="refresh-btn" onclick="loadSummary()">🔄 重新整理</button>
-  </div>
-  <div id="summaryContent">
-    <div class="empty-state"><div class="emoji">⏳</div><p>載入中⋯</p></div>
-  </div>
-</div>
-
-</div><!-- /app -->
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<script>
-// ── Product data ───────────────────────────────────────────
-const PRODUCTS = [
-  {id:'p1', name:'Pro Calm Red X CREAM 維生素K乳霜', price:450, cat:'眼周'},
-  {id:'p2', name:'Dr. Melaxin 視黃醇眼袋緊緻霜', price:1080, cat:'眼周'},
-  {id:'p3', name:'Peridex 眼藥水（請備註涼感度）', price:250, cat:'眼藥水'},
-  {id:'p4', name:'PDRN 眼部保濕精華（리안）', price:499, cat:'眼藥水'},
-  {id:'p5', name:'Cearteen 水楊酸祛痘水', price:450, cat:'痘疤'},
-  {id:'p6', name:'Scarnon Gel 除疤修復凝膠', price:590, cat:'痘疤'},
-  {id:'p7', name:'Melatoning Cream 褪黑去斑霜', price:1080, cat:'美白'},
-  {id:'p8', name:'Domina Cream 居家皮秒淡斑膏', price:0, cat:'美白', tbd:true},
-  {id:'p9', name:'Juvekle 童顏霜 🔥必買', price:1180, cat:'膠原蛋白'},
-  {id:'p10', name:'Rejuyoung 深層修復霜', price:1080, cat:'膠原蛋白'},
-  {id:'p11', name:'積雪草外泌體 20安瓶（日常修護）', price:690, cat:'外泌體'},
-  {id:'p12', name:'積雪草外泌體 50安瓶 Plus（急救）', price:890, cat:'外泌體'},
-  {id:'p13', name:'Dr.Reju-All PD3 全效霜 💥激推', price:1080, cat:'PDRN'},
-  {id:'p14', name:'Dr.Reju-All PDRN 唇部修護精華', price:550, cat:'PDRN'},
-  {id:'p15', name:'Dr.Reju-All PDRN 煥顏面膜（6片）', price:880, cat:'PDRN'},
-  {id:'p16', name:'熊貓PDRN再生霜 🟢綠（清爽）', price:750, cat:'熊貓'},
-  {id:'p17', name:'熊貓PDRN再生霜 🔵藍（微針）', price:850, cat:'熊貓'},
-  {id:'p18', name:'熊貓維他命C霜 🌙熬夜必買', price:750, cat:'熊貓'},
-];
-
-// ── Blob (shared, hardcoded) ──────────────────────────────
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019e4048-aa27-7a2f-8fe0-f31ca1f13742';
-
-async function blobGet(){
-  const r = await fetch(BLOB_URL + '?cb=' + Date.now());
-  if(!r.ok) throw new Error('讀取失敗 HTTP ' + r.status);
-  return r.json();
-}
-async function blobPut(data){
-  const r = await fetch(BLOB_URL, {
-    method:'PUT', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  });
-  if(!r.ok) throw new Error('儲存失敗 HTTP ' + r.status);
-}
-
-// ── Tab switching ──────────────────────────────────────────
-function showTab(name, btn){
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
-  document.getElementById('tab-' + name).classList.add('on');
-  if(btn) btn.classList.add('on');
-  if(name === 'summary') loadSummary();
-}
-
-// ── Build order form product rows ──────────────────────────
-function buildOrderForm(){
-  const list = document.getElementById('orderProductList');
-  list.innerHTML = '';
-  let lastCat = '';
-  PRODUCTS.forEach(p => {
-    if(p.cat !== lastCat){
-      const div = document.createElement('div');
-      div.style.cssText = 'font-size:.7rem;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:1px;margin:14px 0 6px';
-      div.textContent = p.cat;
-      list.appendChild(div);
-      lastCat = p.cat;
-    }
-    const row = document.createElement('div');
-    row.className = 'ord-row';
-    row.id = 'row_' + p.id;
-    row.innerHTML = `
-      <div class="ord-top">
-        <input class="ord-cb" type="checkbox" id="cb_${p.id}" onchange="toggleItem('${p.id}')">
-        <label class="ord-name" for="cb_${p.id}">${p.name}${p.tbd?'<small>現場確認價格</small>':''}</label>
-        <span class="ord-price">${p.price ? '$'+p.price : '待確認'}</span>
-      </div>
-      <div class="qty-row">
-        <span class="qty-label">數量</span>
-        <div class="qty-ctrl">
-          <button class="q-btn" onclick="changeQty('${p.id}',-1)">−</button>
-          <span class="q-val" id="qty_${p.id}">1</span>
-          <button class="q-btn" onclick="changeQty('${p.id}',+1)">+</button>
+  <!-- 頂部大橫幅 -->
+  <header class="bg-gradient-to-r from-teal-600 to-cyan-700 text-white shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center justify-center md:justify-start gap-2">
+          <span class="text-3xl">🇰🇷</span>
+          <span class="bg-white/20 text-xs font-bold px-2 py-0.5 rounded-full">辦公室好物團購</span>
         </div>
-        <span class="ord-sub" id="sub_${p.id}">${p.price ? '$'+p.price : ''}</span>
-      </div>`;
-    list.appendChild(row);
-  });
-}
-
-function toggleItem(id){
-  const cb = document.getElementById('cb_'+id);
-  const row = document.getElementById('row_'+id);
-  row.classList.toggle('selected', cb.checked);
-  recalcTotal();
-}
-
-function changeQty(id, delta){
-  const el = document.getElementById('qty_'+id);
-  const p = PRODUCTS.find(x=>x.id===id);
-  let v = parseInt(el.textContent) + delta;
-  if(v < 1) v = 1;
-  if(v > 10) v = 10;
-  el.textContent = v;
-  if(p.price){
-    document.getElementById('sub_'+id).textContent = '$' + (p.price * v);
-  }
-  recalcTotal();
-}
-
-function recalcTotal(){
-  let total = 0, count = 0, hasTbd = false;
-  PRODUCTS.forEach(p => {
-    const cb = document.getElementById('cb_'+p.id);
-    if(cb && cb.checked){
-      const qty = parseInt(document.getElementById('qty_'+p.id).textContent);
-      if(p.price){ total += p.price * qty; } else { hasTbd = true; }
-      count += qty;
-    }
-  });
-  document.getElementById('totalAmt').textContent = total > 0 ? '$' + total + (hasTbd?' + α':'') : (hasTbd ? '現場確認' : '$0');
-  document.getElementById('totalCnt').textContent = count > 0 ? `已選 ${count} 份商品` : '尚未選擇商品';
-}
-
-// ── Submit order ───────────────────────────────────────────
-async function submitOrder(){
-  const name = document.getElementById('ordererName').value.trim();
-  if(!name){ showToast('請填寫訂購人姓名'); document.getElementById('ordererName').focus(); return; }
-  const items = [];
-  PRODUCTS.forEach(p => {
-    const cb = document.getElementById('cb_'+p.id);
-    if(cb && cb.checked){
-      const qty = parseInt(document.getElementById('qty_'+p.id).textContent);
-      items.push({id:p.id, name:p.name, price:p.price, qty, tbd:p.tbd||false});
-    }
-  });
-  if(items.length === 0){ showToast('請至少選擇一項商品'); return; }
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = '送出中…';
-
-  const note = document.getElementById('orderNote').value.trim();
-  const total = items.reduce((s,i)=>s+(i.price*i.qty),0);
-  const hasTbd = items.some(i=>i.tbd);
-  const order = {
-    id: Date.now().toString(36),
-    name, items, total, hasTbd, note,
-    ts: new Date().toISOString()
-  };
-
-  try {
-    const data = await blobGet();
-    data.pharmacyOrders = data.pharmacyOrders || [];
-    data.pharmacyOrders.push(order);
-    await blobPut(data);
-    showSuccess(order);
-  } catch(e) {
-    btn.disabled = false; btn.textContent = '📦 送出訂單';
-    showToast('送出失敗，請確認網路連線：' + e.message);
-  }
-}
-
-function showSuccess(order){
-  document.getElementById('orderForm').style.display = 'none';
-  const card = document.getElementById('successCard');
-  card.style.display = 'block';
-
-  const lines = order.items.map(i =>
-    `  • ${i.name.replace(/ 🔥必買| 💥激推| 🌙熬夜必買/g,'')} × ${i.qty}${i.price?' ($'+(i.price*i.qty)+')':'（現場確認）'}`
-  ).join('\n');
-  const totalStr = order.total > 0 ? `$${order.total} TWD` + (order.hasTbd ? ' + 部分現場確認' : '') : '現場確認';
-  const summaryText = `訂購人：${order.name}\n\n${lines}\n\n預估合計：${totalStr}${order.note ? '\n備註：'+order.note : ''}`;
-
-  document.getElementById('successSummary').innerHTML =
-    summaryText.replace(/\n/g,'<br>');
-  window._lastSummaryText = `【韓國藥局團購訂單】\n${summaryText}\n\n日期：2026/05`;
-}
-
-function copyOrderSummary(){
-  navigator.clipboard.writeText(window._lastSummaryText)
-    .then(()=>showToast('✅ 已複製，貼到 LINE 傳給帶貨人！'))
-    .catch(()=>showToast('請手動複製訂單內容'));
-}
-
-function resetForm(){
-  document.getElementById('orderForm').style.display = 'block';
-  document.getElementById('successCard').style.display = 'none';
-  document.getElementById('ordererName').value = '';
-  document.getElementById('orderNote').value = '';
-  document.querySelectorAll('.ord-cb').forEach(cb => { cb.checked = false; });
-  document.querySelectorAll('.ord-row').forEach(r => r.classList.remove('selected'));
-  document.querySelectorAll('.q-val').forEach(el => el.textContent = '1');
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('submitBtn').textContent = '📦 送出訂單';
-  recalcTotal();
-}
-
-// ── Load summary ───────────────────────────────────────────
-async function loadSummary(){
-  const el = document.getElementById('summaryContent');
-  el.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>載入中…</p></div>';
-  try {
-    const data = await blobGet();
-    const orders = (data.pharmacyOrders || []).sort((a,b) => a.ts > b.ts ? -1 : 1);
-    if(orders.length === 0){
-      el.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>目前還沒有人提交訂單</p></div>';
-      return;
-    }
-    renderSummary(orders, el);
-  } catch(e) {
-    el.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><p>載入失敗<br>${e.message}</p></div>`;
-  }
-}
-
-function renderSummary(orders, el){
-  // Aggregate
-  const agg = {}; // id → {name, price, qty, tbd}
-  let grandTotal = 0;
-  orders.forEach(o => {
-    o.items.forEach(i => {
-      if(!agg[i.id]) agg[i.id] = {name:i.name, price:i.price, qty:0, tbd:i.tbd};
-      agg[i.id].qty += i.qty;
-      grandTotal += (i.price||0) * i.qty;
-    });
-  });
-
-  let html = '';
-
-  // Grand total card
-  html += `<div class="grand-total">
-    <div class="gt-label">📦 總訂單數：${orders.length} 筆</div>
-    <div class="gt-amt">$${grandTotal.toLocaleString()} TWD</div>
-    <div class="gt-note">依實際到手價格為準，部分商品現場確認</div>
-  </div>`;
-
-  // Aggregate demand table
-  html += `<div class="agg-card"><h3>🏆 商品需求統計</h3>`;
-  Object.values(agg).sort((a,b)=>b.qty-a.qty).forEach(item => {
-    const cleanName = item.name.replace(/ 🔥必買| 💥激推| 🌙熬夜必買/g,'');
-    html += `<div class="agg-row">
-      <span class="agg-name">${cleanName}</span>
-      <span class="agg-qty">${item.qty} 份</span>
-      <span class="agg-subtotal">${item.price ? '$'+(item.price*item.qty) : '待確認'}</span>
-    </div>`;
-  });
-  html += '</div>';
-
-  // Individual orders
-  html += `<div style="font-size:.8rem;font-weight:700;color:#555;margin:14px 0 8px">📋 個人訂單明細</div>`;
-  orders.forEach(o => {
-    const dt = new Date(o.ts).toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-    const itemsHtml = o.items.map(i =>
-      `<div class="item-row"><span>${i.name.replace(/ 🔥必買| 💥激推| 🌙熬夜必買/g,'')} × ${i.qty}</span><span>${i.price?'$'+(i.price*i.qty):'待確認'}</span></div>`
-    ).join('');
-    const totalStr = o.total > 0 ? '$'+o.total+(o.hasTbd?' + α':'') : '現場確認';
-    html += `<div class="order-card">
-      <div class="order-card-hd">
-        <div class="order-person">👤 ${o.name}</div>
-        <div class="order-time">${dt}</div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1">韓國藥妝熱銷品 智慧登記與自動匯整表</h1>
+        <p class="text-sm text-teal-100 max-w-2xl">
+          填寫完畢送出後，系統會自動在雲端統計每位訂購人、產品數量及金額，所有人即時可見，主揪可一鍵匯出 Excel。
+        </p>
       </div>
-      <div class="order-items">${itemsHtml}</div>
-      <div class="order-total-line"><span>小計</span><span>${totalStr}</span></div>
-      ${o.note ? `<div class="order-note">💬 ${o.note}</div>` : ''}
-    </div>`;
-  });
+      <div class="shrink-0 flex flex-col items-center md:items-end gap-2">
+        <button onclick="copyShareLink()" class="bg-white text-teal-700 hover:bg-teal-50 font-bold py-2 px-4 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          複製分享網址
+        </button>
+        <div class="bg-white/10 px-4 py-1.5 rounded-xl border border-white/10 text-center md:text-right mt-1">
+          <p class="text-[10px] text-teal-200 uppercase">當前統計</p>
+          <p class="text-sm font-bold"><span id="header-total-people" class="text-amber-300">0</span> 位已登記</p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  el.innerHTML = html;
-}
+  <!-- 頁籤切換 -->
+  <div class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 flex">
+      <button id="tab-order" onclick="switchTab('order')" class="flex-1 py-4 text-center font-bold text-sm border-b-2 border-teal-600 text-teal-600 flex items-center justify-center gap-2 transition-all">
+        <i data-lucide="edit-3" class="w-4 h-4"></i>
+        我要跟團 (同事填寫區)
+      </button>
+      <button id="tab-dashboard" onclick="switchTab('dashboard')" class="flex-1 py-4 text-center font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center justify-center gap-2 transition-all">
+        <i data-lucide="database" class="w-4 h-4"></i>
+        主揪管理後台
+        <span id="dashboard-badge" class="bg-teal-100 text-teal-800 text-[11px] px-2 py-0.5 rounded-full font-bold">0</span>
+      </button>
+    </div>
+  </div>
 
-// ── Toast ──────────────────────────────────────────────────
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
-}
+  <main class="max-w-6xl mx-auto px-4 py-6">
 
-// ── Bootstrap ─────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  buildOrderForm();
-});
-</script>
+    <!-- Toast 通知 -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 border border-slate-800 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transition-all">
+      <i id="toast-icon" data-lucide="info" class="text-teal-400 w-4 h-4"></i>
+      <span id="toast-text">訊息提示</span>
+    </div>
+
+    <!-- 同步狀態指示 -->
+    <div id="sync-bar" class="hidden mb-4 bg-teal-50 border border-teal-200 rounded-xl px-4 py-2.5 flex items-center gap-2 text-xs font-semibold text-teal-700">
+      <i data-lucide="loader-2" class="w-4 h-4 spin text-teal-500"></i>
+      <span id="sync-text">正在同步雲端資料…</span>
+    </div>
+
+    <!-- 頁面 1：填寫訂單 -->
+    <div id="view-order" class="space-y-6">
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-4">
+        <h2 class="text-lg font-bold text-slate-955 flex items-center gap-2">
+          <span class="w-6 h-6 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+          填寫訂購人資訊
+        </h2>
+        <div class="max-w-md">
+          <label class="block text-xs font-bold text-slate-400 uppercase mb-1">您的姓名 / 暱稱 *</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="orderer-name" placeholder="請輸入姓名 (例如：雅婷、陳經理)" class="w-full pl-9 pr-3 py-2.5 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none font-medium transition-all text-sm">
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-lg font-bold text-slate-955 flex items-center gap-2 px-1">
+          <span class="w-6 h-6 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+          挑選熱門藥妝商品
+        </h2>
+        <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+    </div>
+
+    <!-- 頁面 2：主揪後台 -->
+    <div id="view-dashboard" class="hidden space-y-6">
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600">
+            <i data-lucide="users" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">總登記人數</p>
+            <p id="stat-people" class="text-2xl font-bold text-slate-800">0 人</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600">
+            <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">累計採購件數</p>
+            <p id="stat-items" class="text-2xl font-bold text-slate-800">0 件</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+            <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">團購總金額</p>
+            <p id="stat-money" class="text-2xl font-extrabold text-teal-600">NT$ 0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-0.5">
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <i data-lucide="table" class="text-teal-600 w-5 h-5"></i>
+              訂購人明細對照表
+            </h3>
+            <p class="text-xs text-slate-400">已自動整合所有人的訂購項目、數量與金額（雲端即時同步）</p>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button onclick="refreshDashboard()" id="refresh-btn" class="flex-1 sm:flex-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              重新整理
+            </button>
+            <button onclick="exportToCSV()" class="flex-1 sm:flex-none bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition-all">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              匯出 Excel (CSV)
+            </button>
+            <button onclick="clearAllOrders()" class="flex-1 sm:flex-none bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              清空重置
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm whitespace-nowrap">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="py-3 px-5 font-bold">登記時間</th>
+                <th class="py-3 px-5 font-bold">訂購人姓名</th>
+                <th class="py-3 px-5 font-bold">選購項目與數量明細</th>
+                <th class="py-3 px-5 font-bold text-right">小計金額</th>
+                <th class="py-3 px-5 font-bold text-center">操作</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 border-b border-slate-100 pb-3">
+          <i data-lucide="bar-chart-3" class="text-teal-600 w-5 h-5"></i>
+          各商品採購量累計排行
+        </h3>
+        <div id="stat-chart-bars" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 底部懸浮列 -->
+  <div id="sticky-bar" class="bg-white border-t border-slate-200 p-4 fixed bottom-0 left-0 right-0 shadow-lg z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="text-left">
+        <p class="text-xs text-slate-400">已選 <span id="summary-count" class="font-bold text-teal-600 text-sm">0</span> 件商品</p>
+        <p class="text-lg font-bold text-slate-800">總金額 <span id="summary-price" class="text-teal-600 text-xl font-extrabold">NT$ 0</span></p>
+      </div>
+      <div>
+        <button id="submit-btn" onclick="submitOrder()" class="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-extrabold py-3 px-8 rounded-xl shadow-md flex items-center gap-2 transition-all disabled:bg-slate-300 disabled:cursor-not-allowed">
+          <i data-lucide="check-circle" class="w-5 h-5"></i>
+          確認送出登記
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── 雲端共用 Blob（所有人寫入同一份資料） ──────────────────
+    const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019e4048-aa27-7a2f-8fe0-f31ca1f13742';
+
+    async function cloudLoad() {
+      const r = await fetch(BLOB_URL + '?cb=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      return { blob: data, orders: data.pharmacyOrders || [] };
+    }
+
+    async function cloudSave(orders) {
+      const { blob } = await cloudLoad();
+      blob.pharmacyOrders = orders;
+      const r = await fetch(BLOB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(blob)
+      });
+      if (!r.ok) throw new Error('儲存失敗 HTTP ' + r.status);
+    }
+
+    function showSync(msg) {
+      const bar = document.getElementById('sync-bar');
+      document.getElementById('sync-text').textContent = msg;
+      bar.classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function hideSync() {
+      document.getElementById('sync-bar').classList.add('hidden');
+    }
+
+    // ── 商品資料 ────────────────────────────────────────────────
+    const products = [
+      { id:"domina",          name:"Domina Cream 居家皮秒淡斑膏",       tagline:"韓國熱銷 No.1 居家皮秒淡斑神器",            price:1080, color:"zinc",   category:"祛斑保養", note:"請先詢問藥師用法" },
+      { id:"reju_green",      name:"熊貓 PDRN 再生霜 🟢 綠",           tagline:"高濃度 PDRN 1500ppm / 清爽凝膠",           price:750,  color:"emerald",category:"日常修復" },
+      { id:"reju_blue",       name:"熊貓 PDRN 再生霜 🔵 藍",           tagline:"PDRN 1500ppm + Spicule 微針",              price:850,  color:"blue",   category:"深層修復", note:"敏感肌先小範圍試用" },
+      { id:"panda_vita",      name:"熊貓維他命 C 霜 🌙",               tagline:"熬夜人必備！美白提亮去斑",                 price:750,  color:"amber",  category:"美白提亮" },
+      { id:"pd3_cream",       name:"Dr.Reju-All PD3 全效霜 💥",        tagline:"PDRN 1200ppm 溫和不刺激，激推",            price:1080, color:"rose",   category:"全效抗老" },
+      { id:"reju_lip",        name:"PD3 PDRN 唇部修護精華",            tagline:"改善乾裂角質、重塑水嫩豐唇",              price:550,  color:"pink",   category:"唇部護理" },
+      { id:"reju_mask",       name:"高修復 PDRN 煥顏修護面膜",         tagline:"高含量 PDRN 1200ppm 一盒 6 片",            price:880,  color:"indigo", category:"深層面膜" },
+      { id:"cica_20",         name:"積雪草外泌體 20 安瓶",             tagline:"【日常修護款】9種胜肽 + EGF 溫和高效",     price:690,  color:"teal",   category:"日常屏障" },
+      { id:"cica_50",         name:"積雪草外泌體 50 安瓶 Plus",        tagline:"【高濃度急救款】美白+抗皺雙效",            price:890,  color:"cyan",   category:"術後急救" },
+      { id:"juvekle",         name:"Juvekle 童顏霜 🔥 必買",           tagline:"PDLLA 10,625ppm 塗抹式膠原針",             price:1180, color:"violet", category:"局部澎潤" },
+      { id:"reju_deep",       name:"Rejuyoung 深層修復霜",             tagline:"10,000ppm 直達真皮層 3 倍高滲透",          price:1080, color:"purple", category:"深層保養" },
+      { id:"peridex",         name:"Peridex 葡萄糖營養眼藥水",         tagline:"乾眼人救星！四種清涼度自由選",             price:250,  color:"sky",    category:"眼部護理", note:"備註涼感度：0/1/4/10 度" },
+      { id:"rian_pdrn",       name:"Rian PDRN 眼部保濕精華",           tagline:"韓國第一款 PDRN 人工淚液，1次性無防腐劑",  price:499,  color:"blue",   category:"眼部護理" },
+      { id:"cearteen",        name:"Cearteen 水楊酸祛痘水",            tagline:"含 2% 水楊酸，對抗悶痘與粉刺",             price:450,  color:"emerald",category:"痘痘急救" },
+      { id:"melatoning",      name:"Melatoning Cream 褪黑去斑霜",      tagline:"改善深層黑色素、雀斑與痘疤暗沉",          price:1080, color:"slate",  category:"祛斑保養" },
+      { id:"scarnon",         name:"Scarnon Gel 除疤修復凝膠",         tagline:"手術、外傷及燒燙傷疤痕修復",              price:590,  color:"lime",   category:"日常急救", note:"開放傷口勿用" },
+      { id:"procalm_k",       name:"Pro Calm Red X CREAM 維生素K霜",   tagline:"專攻退紅消腫、緩解眼袋黑眼圈",            price:450,  color:"purple", category:"眼部護理" },
+      { id:"melaxin_retinol", name:"Dr. Melaxin 視黃醇眼袋緊緻霜",     tagline:"脂質體 A 醇成分、專攻眼尾魚尾紋",         price:1080, color:"amber",  category:"眼部護理" }
+    ];
+
+    let localQuantities = {};
+    let allOrders = [];
+
+    // ── 初始化 ──────────────────────────────────────────────────
+    async function init() {
+      products.forEach(p => localQuantities[p.id] = 0);
+      renderProductCards();
+      updateOrderSummary();
+      showSync('正在載入雲端訂單資料…');
+      try {
+        const { orders } = await cloudLoad();
+        allOrders = orders;
+      } catch(e) {
+        allOrders = [];
+        showToast('⚠️ 雲端載入失敗，請確認網路：' + e.message, true);
+      }
+      hideSync();
+      updateDashboardUI();
+      lucide.createIcons();
+    }
+
+    // ── 渲染商品卡片 ────────────────────────────────────────────
+    function renderProductCards() {
+      const container = document.getElementById('products-container');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const colors = getThemeColors(p.color);
+        const card = document.createElement('div');
+        card.id = 'card-' + p.id;
+        card.className = 'bg-white rounded-2xl p-4 border border-slate-200 hover:border-teal-500 hover:shadow-md transition-all flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${colors.badge}">${p.category}</span>
+              <span class="text-xs text-slate-500 font-semibold">NT$ ${p.price.toLocaleString()}</span>
+            </div>
+            <h3 class="font-extrabold text-slate-900 text-sm md:text-base leading-snug">${p.name}</h3>
+            <p class="text-xs font-semibold ${colors.text} mt-0.5">${p.tagline}</p>
+            ${p.note ? `<p class="text-[11px] text-amber-600 bg-amber-50 rounded-lg px-2 py-1 mt-2">⚠️ ${p.note}</p>` : ''}
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span id="subtotal-${p.id}" class="text-xs font-bold text-teal-600"></span>
+            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+              <button onclick="adjustQty('${p.id}', -1)" class="px-2.5 py-1 text-slate-500 hover:bg-slate-200 active:bg-slate-300 transition-all font-bold text-sm">-</button>
+              <input type="number" id="input-${p.id}" value="0" min="0" onchange="setQty('${p.id}', this.value)" class="w-10 text-center bg-transparent text-xs font-bold focus:outline-none py-1 border-x border-slate-200">
+              <button onclick="adjustQty('${p.id}', 1)" class="px-2.5 py-1 text-slate-500 hover:bg-slate-200 active:bg-slate-300 transition-all font-bold text-sm">+</button>
+            </div>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    window.adjustQty = function(id, val) {
+      const input = document.getElementById('input-' + id);
+      if (!input) return;
+      input.value = Math.max(0, (parseInt(input.value) || 0) + val);
+      setQty(id, input.value);
+    };
+
+    window.setQty = function(id, val) {
+      const v = Math.max(0, parseInt(val) || 0);
+      const input = document.getElementById('input-' + id);
+      if (input) input.value = v;
+      localQuantities[id] = v;
+      const p = products.find(x => x.id === id);
+      const sub = document.getElementById('subtotal-' + id);
+      const card = document.getElementById('card-' + id);
+      if (v > 0) {
+        if (sub) sub.innerText = '小計: $' + (v * p.price).toLocaleString();
+        if (card) card.className = 'bg-white rounded-2xl p-4 border-2 border-teal-500 bg-teal-50/5 shadow-sm flex flex-col justify-between';
+      } else {
+        if (sub) sub.innerText = '';
+        if (card) card.className = 'bg-white rounded-2xl p-4 border border-slate-200 hover:border-teal-500 hover:shadow-md transition-all flex flex-col justify-between';
+      }
+      updateOrderSummary();
+    };
+
+    function updateOrderSummary() {
+      let count = 0, price = 0;
+      products.forEach(p => { const q = localQuantities[p.id] || 0; count += q; price += q * p.price; });
+      document.getElementById('summary-count').innerText = count;
+      document.getElementById('summary-price').innerText = 'NT$ ' + price.toLocaleString();
+    }
+
+    // ── 送出訂單（雲端儲存） ─────────────────────────────────────
+    window.submitOrder = async function() {
+      const nameInput = document.getElementById('orderer-name');
+      const ordererName = nameInput.value.trim();
+      if (!ordererName) {
+        showToast('⚠️ 請先輸入步驟 1 的姓名！', true);
+        nameInput.focus();
+        nameInput.classList.add('ring-2', 'ring-rose-500');
+        return;
+      }
+      nameInput.classList.remove('ring-2', 'ring-rose-500');
+
+      const items = [];
+      let totalAmount = 0;
+      products.forEach(p => {
+        const qty = localQuantities[p.id] || 0;
+        if (qty > 0) { items.push({ id:p.id, name:p.name, price:p.price, qty }); totalAmount += qty * p.price; }
+      });
+      if (items.length === 0) { showToast('⚠️ 尚未選擇任何產品數量！', true); return; }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 spin"></i> 同步中…';
+      lucide.createIcons();
+      showSync('正在將訂單寫入雲端…');
+
+      const now = new Date();
+      const ts = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const newOrder = { id:'ord-'+Date.now(), time:ts, name:ordererName, items, total:totalAmount };
+
+      try {
+        const { blob, orders } = await cloudLoad();
+        orders.unshift(newOrder);
+        blob.pharmacyOrders = orders;
+        const r = await fetch(BLOB_URL, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(blob) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        allOrders = orders;
+        updateDashboardUI();
+        showToast('🎉 登記成功！已即時同步給主揪！', false);
+
+        // 清除表單
+        products.forEach(p => {
+          localQuantities[p.id] = 0;
+          const el = document.getElementById('input-' + p.id);
+          if (el) el.value = 0;
+          const sub = document.getElementById('subtotal-' + p.id);
+          if (sub) sub.innerText = '';
+          const card = document.getElementById('card-' + p.id);
+          if (card) card.className = 'bg-white rounded-2xl p-4 border border-slate-200 hover:border-teal-500 hover:shadow-md transition-all flex flex-col justify-between';
+        });
+        nameInput.value = '';
+        updateOrderSummary();
+        setTimeout(() => switchTab('dashboard'), 500);
+      } catch(e) {
+        showToast('❌ 送出失敗，請確認網路：' + e.message, true);
+      } finally {
+        hideSync();
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> 確認送出登記';
+        lucide.createIcons();
+      }
+    };
+
+    // ── 刪除單筆 ────────────────────────────────────────────────
+    window.deleteSingleOrder = async function(id) {
+      if (!confirm('確定要刪除這筆登記紀錄嗎？')) return;
+      showSync('正在刪除並同步雲端…');
+      try {
+        const { blob, orders } = await cloudLoad();
+        blob.pharmacyOrders = orders.filter(o => o.id !== id);
+        await fetch(BLOB_URL, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(blob) });
+        allOrders = blob.pharmacyOrders;
+        updateDashboardUI();
+        showToast('🗑️ 紀錄已刪除並同步！', false);
+      } catch(e) {
+        showToast('❌ 刪除失敗：' + e.message, true);
+      } finally { hideSync(); }
+    };
+
+    // ── 清空全部 ────────────────────────────────────────────────
+    window.clearAllOrders = async function() {
+      if (!confirm('⚠️ 警告：這將清除所有雲端登記紀錄！確定嗎？')) return;
+      showSync('正在清空雲端資料…');
+      try {
+        const { blob } = await cloudLoad();
+        blob.pharmacyOrders = [];
+        await fetch(BLOB_URL, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(blob) });
+        allOrders = [];
+        updateDashboardUI();
+        showToast('🗑️ 已成功重設清空所有登記資料！', false);
+      } catch(e) {
+        showToast('❌ 清空失敗：' + e.message, true);
+      } finally { hideSync(); }
+    };
+
+    // ── 重新整理後台 ─────────────────────────────────────────────
+    window.refreshDashboard = async function() {
+      const btn = document.getElementById('refresh-btn');
+      btn.disabled = true;
+      showSync('重新載入最新訂單…');
+      try {
+        const { orders } = await cloudLoad();
+        allOrders = orders;
+        updateDashboardUI();
+        showToast('✅ 已載入最新資料！', false);
+      } catch(e) {
+        showToast('❌ 重整失敗：' + e.message, true);
+      } finally {
+        hideSync();
+        btn.disabled = false;
+      }
+    };
+
+    // ── 後台 UI ─────────────────────────────────────────────────
+    function updateDashboardUI() {
+      const tableBody = document.getElementById('orders-table-body');
+      tableBody.innerHTML = '';
+      document.getElementById('header-total-people').innerText = allOrders.length;
+      document.getElementById('dashboard-badge').innerText = allOrders.length;
+      document.getElementById('stat-people').innerText = allOrders.length + ' 人';
+
+      let totalItems = 0, totalMoney = 0;
+      const counts = {};
+      products.forEach(p => counts[p.id] = 0);
+
+      if (allOrders.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-slate-400 font-medium">目前尚無任何人提交登記資料</td></tr>';
+      } else {
+        allOrders.forEach(order => {
+          totalMoney += order.total;
+          let itemsHTML = '<div class="space-y-1">';
+          order.items.forEach(item => {
+            totalItems += item.qty;
+            if (counts[item.id] !== undefined) counts[item.id] += item.qty;
+            itemsHTML += `<div class="flex items-center gap-1.5 text-xs text-slate-700"><span class="bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded font-extrabold text-[10px]">x${item.qty}</span><span class="font-medium">${escapeHTML(item.name)}</span></div>`;
+          });
+          itemsHTML += '</div>';
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-50 transition-all';
+          row.innerHTML = `
+            <td class="py-4 px-5 text-xs text-slate-400 font-medium">${order.time}</td>
+            <td class="py-4 px-5 font-bold text-slate-800">${escapeHTML(order.name)}</td>
+            <td class="py-4 px-5">${itemsHTML}</td>
+            <td class="py-4 px-5 text-right font-extrabold text-teal-600 text-sm">NT$ ${order.total.toLocaleString()}</td>
+            <td class="py-4 px-5 text-center">
+              <button onclick="deleteSingleOrder('${order.id}')" class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg transition-all">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>`;
+          tableBody.appendChild(row);
+        });
+      }
+
+      document.getElementById('stat-items').innerText = totalItems + ' 件';
+      document.getElementById('stat-money').innerText = 'NT$ ' + totalMoney.toLocaleString();
+      renderChart(counts, totalItems);
+      lucide.createIcons();
+    }
+
+    function renderChart(counts, grandTotal) {
+      const container = document.getElementById('stat-chart-bars');
+      container.innerHTML = '';
+      if (grandTotal === 0) {
+        container.innerHTML = '<p class="text-center text-slate-400 text-xs py-8">暫無統計數據</p>';
+        return;
+      }
+      [...products].sort((a,b) => counts[b.id] - counts[a.id]).forEach(p => {
+        const qty = counts[p.id];
+        if (qty <= 0) return;
+        const pct = Math.round((qty / grandTotal) * 100);
+        const colors = getThemeColors(p.color);
+        const row = document.createElement('div');
+        row.className = 'space-y-1 text-xs';
+        row.innerHTML = `
+          <div class="flex justify-between items-center font-bold">
+            <span class="text-slate-700 truncate max-w-[220px] sm:max-w-md">${p.name}</span>
+            <span class="text-slate-500 text-[11px]">${qty} 件 (${pct}%)</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+            <div class="${colors.bgBar} h-full rounded-full transition-all duration-500" style="width:${pct}%"></div>
+          </div>`;
+        container.appendChild(row);
+      });
+    }
+
+    // ── 匯出 CSV ────────────────────────────────────────────────
+    window.exportToCSV = function() {
+      if (allOrders.length === 0) { showToast('⚠️ 目前沒有任何紀錄可供匯出！', true); return; }
+      let csv = '﻿登記時間,訂購人,訂購品項與數量,總小計\n';
+      allOrders.forEach(o => {
+        const items = o.items.map(i => `[${i.name} x${i.qty}]`).join(' ');
+        csv += `"${o.time}","${o.name}","${items}","NT$ ${o.total.toLocaleString()}"\n`;
+      });
+      const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+      const a = document.createElement('a');
+      a.href = url; a.download = `韓國藥妝團購統計表_${new Date().toLocaleDateString().replace(/\//g,'-')}.csv`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast('💾 Excel 檔案 (CSV) 下載成功！', false);
+    };
+
+    // ── 頁籤切換 ─────────────────────────────────────────────────
+    window.switchTab = function(tabName) {
+      const isOrder = tabName === 'order';
+      document.getElementById('tab-order').className = `flex-1 py-4 text-center font-bold text-sm border-b-2 ${isOrder ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-500 hover:text-slate-800'} flex items-center justify-center gap-2 transition-all`;
+      document.getElementById('tab-dashboard').className = `flex-1 py-4 text-center font-bold text-sm border-b-2 ${!isOrder ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-500 hover:text-slate-800'} flex items-center justify-center gap-2 transition-all`;
+      document.getElementById('view-order').classList.toggle('hidden', !isOrder);
+      document.getElementById('view-dashboard').classList.toggle('hidden', isOrder);
+      document.getElementById('sticky-bar').classList.toggle('hidden', !isOrder);
+      if (!isOrder) refreshDashboard();
+    };
+
+    // ── 複製分享連結 ─────────────────────────────────────────────
+    window.copyShareLink = function() {
+      const url = window.location.href.split('?')[0];
+      navigator.clipboard.writeText(url)
+        .then(() => showToast('🔗 網址已複製！直接傳給同事開啟即可登記。', false))
+        .catch(() => showToast('🔗 請手動複製網址列的連結', false));
+    };
+
+    function showToast(text, isError) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      document.getElementById('toast-text').innerText = text;
+      toast.className = `fixed bottom-5 right-5 z-50 ${isError ? 'bg-rose-900 border-rose-800 text-rose-50' : 'bg-slate-900 border-slate-800 text-white'} text-xs font-semibold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transition-all`;
+      icon.setAttribute('data-lucide', isError ? 'alert-triangle' : 'check-circle');
+      lucide.createIcons();
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    function escapeHTML(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function getThemeColors(color) {
+      const s = { zinc:{text:'text-zinc-600',badge:'bg-zinc-100 text-zinc-800',bgBar:'bg-zinc-600'}, emerald:{text:'text-emerald-600',badge:'bg-emerald-100 text-emerald-800',bgBar:'bg-emerald-600'}, blue:{text:'text-blue-600',badge:'bg-blue-100 text-blue-800',bgBar:'bg-blue-600'}, amber:{text:'text-amber-600',badge:'bg-amber-100 text-amber-800',bgBar:'bg-amber-600'}, rose:{text:'text-rose-600',badge:'bg-rose-100 text-rose-800',bgBar:'bg-rose-600'}, pink:{text:'text-pink-600',badge:'bg-pink-100 text-pink-800',bgBar:'bg-pink-600'}, indigo:{text:'text-indigo-600',badge:'bg-indigo-100 text-indigo-800',bgBar:'bg-indigo-600'}, teal:{text:'text-teal-600',badge:'bg-teal-100 text-teal-800',bgBar:'bg-teal-600'}, cyan:{text:'text-cyan-600',badge:'bg-cyan-100 text-cyan-800',bgBar:'bg-cyan-600'}, violet:{text:'text-violet-600',badge:'bg-violet-100 text-violet-800',bgBar:'bg-violet-600'}, purple:{text:'text-purple-600',badge:'bg-purple-100 text-purple-800',bgBar:'bg-purple-600'}, sky:{text:'text-sky-600',badge:'bg-sky-100 text-sky-800',bgBar:'bg-sky-600'}, slate:{text:'text-slate-600',badge:'bg-slate-100 text-slate-800',bgBar:'bg-slate-600'}, lime:{text:'text-lime-600',badge:'bg-lime-100 text-lime-800',bgBar:'bg-lime-600'} };
+      return s[color] || s.zinc;
+    }
+
+    init();
+  </script>
 </body>
 </html>
