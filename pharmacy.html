@@ -222,11 +222,12 @@
       if (!r.ok) throw new Error('儲存失敗 HTTP ' + r.status);
     }
 
+    function safeIcons() {
+      try { if (typeof lucide !== 'undefined') safeIcons(); } catch(e) {}
+    }
     function showSync(msg) {
-      const bar = document.getElementById('sync-bar');
       document.getElementById('sync-text').textContent = msg;
-      bar.classList.remove('hidden');
-      lucide.createIcons();
+      document.getElementById('sync-bar').classList.remove('hidden');
     }
     function hideSync() {
       document.getElementById('sync-bar').classList.add('hidden');
@@ -272,7 +273,7 @@
       }
       hideSync();
       updateDashboardUI();
-      lucide.createIcons();
+      safeIcons();
     }
 
     // ── 渲染商品卡片 ────────────────────────────────────────────
@@ -360,8 +361,7 @@
 
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 spin"></i> 同步中…';
-      lucide.createIcons();
+      btn.textContent = '⏳ 同步中…';
       showSync('正在將訂單寫入雲端…');
 
       const now = new Date();
@@ -397,7 +397,7 @@
         hideSync();
         btn.disabled = false;
         btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> 確認送出登記';
-        lucide.createIcons();
+        safeIcons();
       }
     };
 
@@ -494,7 +494,7 @@
       document.getElementById('stat-items').innerText = totalItems + ' 件';
       document.getElementById('stat-money').innerText = 'NT$ ' + totalMoney.toLocaleString();
       renderChart(counts, totalItems);
-      lucide.createIcons();
+      safeIcons();
     }
 
     function renderChart(counts, grandTotal) {
@@ -563,7 +563,7 @@
       document.getElementById('toast-text').innerText = text;
       toast.className = `fixed bottom-5 right-5 z-50 ${isError ? 'bg-rose-900 border-rose-800 text-rose-50' : 'bg-slate-900 border-slate-800 text-white'} text-xs font-semibold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transition-all`;
       icon.setAttribute('data-lucide', isError ? 'alert-triangle' : 'check-circle');
-      lucide.createIcons();
+      safeIcons();
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
