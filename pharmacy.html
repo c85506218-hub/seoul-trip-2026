@@ -202,7 +202,7 @@
 
   <script>
     // ── 雲端共用 Blob（所有人寫入同一份資料） ──────────────────
-    const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019e4048-aa27-7a2f-8fe0-f31ca1f13742';
+    const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019e6c33-baac-7c7f-8dc4-84a7f74965c8';
 
     async function cloudLoad() {
       const r = await fetch(BLOB_URL + '?cb=' + Date.now());
@@ -223,7 +223,7 @@
     }
 
     function safeIcons() {
-      try { if (typeof lucide !== 'undefined') safeIcons(); } catch(e) {}
+      try { if (typeof lucide !== 'undefined') lucide.createIcons(); } catch(e) {}
     }
     function showSync(msg) {
       document.getElementById('sync-text').textContent = msg;
